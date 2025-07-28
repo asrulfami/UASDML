@@ -25,6 +25,7 @@ Menampilkan contoh kalimat untuk tiap tipe label
 Cek ketidakseimbangan (imbalanced data), data kosong, dan potensi bias
 
 🧹 Contoh kode:
+
 <img width="579" height="295" alt="image" src="https://github.com/user-attachments/assets/9d1f8ef3-5d45-46c8-a5ea-b2dd63d2bdb4" />
 
 🧮 3. Model dan Alasan Pemilihan
@@ -46,6 +47,7 @@ Bekerja baik pada data teks sederhana
 Asumsi independensi antar fitur → bisa jadi kelemahan jika konteks antar kata penting
 
 🧑‍💻 Contoh kode model:
+
 <img width="575" height="459" alt="image" src="https://github.com/user-attachments/assets/cb404b53-e51f-4112-8088-f4d5f9273513" />
 
 🔍 4. Insight
