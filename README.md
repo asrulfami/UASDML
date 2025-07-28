@@ -49,3 +49,16 @@ Hipotesis awal ditolak: kalimat dalam artikel memang mengandung informasi pentin
 Model Machine Learning sederhana seperti Logistic Regression dapat digunakan untuk membantu otomatisasi klasifikasi referensi ilmiah
 
 Proyek ini menunjukkan bagaimana teknik Natural Language Processing (NLP) bisa diintegrasikan ke dalam proses ilmiah
+
+👥 Pembagian Tugas (Tag Team GitHub)
+1. Asrul Fami (Leader)
+Membuat repository GitHub UASDML, mengelola branching dan pull request, integrasi akhir semua bagian.
+2. Anggota 1
+Bertugas melakukan Exploratory Data Analysis (EDA): melihat distribusi label, contoh kalimat, dan visualisasi awal.
+3. Anggota 2
+Fokus pada Ekstraksi Kalimat dari File XML menggunakan ElementTree, parsing dataset_id, dan cleaning text.
+4. Anggota 3
+Membuat dan melatih Model Machine Learning (Logistic Regression dan Naive Bayes), termasuk splitting data dan validasi.
+5. Anggota 4
+Menganalisis Hasil Model: evaluasi akurasi, confusion matrix, dan menulis insight dari performa model.
+
