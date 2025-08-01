@@ -1,81 +1,202 @@
-🧐 UAS Data Mining & Learning: Klasifikasi Referensi Dataset Ilmiah
+Berikut adalah file **README.md** lengkap dalam format GitHub markdown, siap kamu unggah ke repositori: [https://github.com/asrulfami/UASDML/](https://github.com/asrulfami/UASDML/)
 
-Proyek ini bertujuan untuk mengklasifikasikan tipe referensi dataset dalam artikel ilmiah berdasarkan kalimat yang memuat DOI (Digital Object Identifier). Proyek ini memanfaatkan teknik Natural Language Processing (NLP) dan algoritma machine learning sederhana seperti Logistic Regression dan Naive Bayes.
+---
 
-📌 1. Hipotesis Awal / Null Hypothesis
+````markdown
+# 📚 Laporan UAS Data Mining  
+## Klasifikasi Referensi Dataset Menggunakan Algoritma SVM  
 
-"Kalimat dalam artikel ilmiah yang menyebutkan DOI dataset tidak memiliki hubungan signifikan terhadap tipe referensinya (Primary, Supplementary, Missing)."
+📌 **Link Repository**: [UASDML GitHub](https://github.com/asrulfami/UASDML/)  
 
-Proyek ini berupaya menguji hipotesis tersebut menggunakan data nyata dari kompetisi Kaggle Make Data Count - Finding Data References, serta pendekatan NLP dan machine learning.
+### 👨‍💻 Disusun oleh:
+- Asrul Fami – 41522010123  
+- Reyhan Vincent – 41522010142  
+- Claudio Nehemia Panggabean – 41522010144  
+- Annas Wicaksono – 41522010211  
+- Andika Gusti Restu – 41522010187  
 
-📊 2. Exploratory Data Analysis (EDA)
+> Program Studi Teknik Informatika  
+> Fakultas Ilmu Komputer  
+> Universitas Mercu Buana Jakarta  
+> Tahun 2025  
 
-Membaca label dari file train_labels.csv
+---
 
-Mengekstrak kalimat dari artikel XML (data/metadata/*.xml) berdasarkan dataset_id
+## 1. 🧠 Hipotesis Awal / Null Hypothesis (20%)
 
-Melihat distribusi label:
+**a. Hipotesis Awal (Null Hypothesis)**  
+> Kalimat dalam artikel ilmiah yang mengandung DOI dataset tidak memiliki pengaruh signifikan terhadap klasifikasi tipe referensinya (Primary, Secondary, atau Missing).
 
-Banyak referensi yang bertipe Missing
+**b. Hipotesis Alternatif**  
+> Kalimat yang memuat referensi DOI memiliki pola teks tertentu yang dapat digunakan untuk memprediksi tipe referensinya.
 
-Referensi Primary relatif sedikit
+🎯 **Tujuan Proyek**  
+Membuktikan bahwa model machine learning dapat membedakan tipe referensi dari kalimat dalam artikel dengan akurasi tinggi berdasarkan fitur teks.
 
-Menampilkan contoh kalimat untuk tiap tipe label
+---
 
-Cek ketidakseimbangan (imbalanced data), data kosong, dan potensi bias
+## 2. 🔍 Exploratory Data Analysis (EDA) (20%)
 
-🧹 Contoh kode:
+Dataset yang digunakan adalah `train_labels.csv`, berisi:
+- `article_id`: ID artikel ilmiah,
+- `dataset_id`: DOI dataset,
+- `type`: label (Primary, Secondary, Missing)
 
-<img width="579" height="295" alt="image" src="https://github.com/user-attachments/assets/9d1f8ef3-5d45-46c8-a5ea-b2dd63d2bdb4" />
+📌 Jumlah Kalimat Setelah Preprocessing:
+| Label     | Jumlah |
+|-----------|--------|
+| Secondary | 423    |
+| Missing   | 257    |
+| Primary   | 222    |
+| **Total** | **902**|
 
-🧮 3. Model dan Alasan Pemilihan
+📄 File XML digunakan untuk mengekstrak kalimat berdasarkan `dataset_id`, kemudian digabungkan dengan label yang sesuai.
 
-✅ Logistic Regression
+### A. 📊 Visualisasi Distribusi Label
 
-Cocok untuk klasifikasi teks
+Distribusi label dalam dataset:
 
-Dapat menangani multi-kelas (multi-class classification)
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-Digabung dengan TF-IDF untuk representasi kata
+plt.figure(figsize=(6,4))
+sns.countplot(x='label', data=df_final, palette='Set2')
+plt.title('Distribusi Label Referensi')
+plt.xlabel('Tipe Referensi')
+plt.ylabel('Jumlah Kalimat')
+plt.show()
+````
 
-⚙️ Naive Bayes
+📌 **Hasil**:
+Distribusi tidak seimbang namun masih bisa digunakan untuk pelatihan. Label *Secondary* paling dominan.
 
-Model baseline yang cepat dan efisien
+### B. 📈 Visualisasi Confusion Matrix
 
-Bekerja baik pada data teks sederhana
+Evaluasi model dilakukan dengan confusion matrix:
 
-Asumsi independensi antar fitur → bisa jadi kelemahan jika konteks antar kata penting
+```python
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-🧑‍💻 Contoh kode model:
+# Prediksi model
+y_pred = model.predict(X_test)
 
-<img width="575" height="459" alt="image" src="https://github.com/user-attachments/assets/cb404b53-e51f-4112-8088-f4d5f9273513" />
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
 
-🔍 4. Insight
+plt.figure(figsize=(6,5))
+disp.plot(cmap='Blues', values_format='d')
+plt.title("Confusion Matrix - SVM")
+plt.show()
+```
 
-Logistic Regression menunjukkan akurasi yang lebih tinggi dibanding Naive Bayes, terutama dalam membedakan Primary dan Supplementary.
+📌 **Penjelasan:**
 
-Data tidak seimbang (Missing sangat dominan), hal ini menurunkan performa model pada label minoritas.
+* Nilai diagonal = prediksi benar
+* Nilai luar diagonal = salah klasifikasi
+* Model cukup baik pada label *Missing* dan *Secondary*
 
-Kalimat antar label sangat mirip, model butuh fitur yang kuat (TF-IDF bekerja cukup baik).
+---
 
-Penggunaan metode NLP sederhana sudah cukup untuk menghasilkan prediksi yang masuk akal.
+## 3. 🤖 Model dan Alasan Pemilihan (20%)
 
-✅ 5. Kesimpulan
+Model utama yang digunakan adalah **Support Vector Machine (SVM)** dengan kernel linear, serta representasi fitur menggunakan **TF-IDF**.
 
-Hipotesis awal ditolak → kalimat dengan DOI dalam artikel berkorelasi signifikan dengan tipe referensinya.
+**Alasan Pemilihan SVM:**
 
-Logistic Regression terbukti efektif untuk tugas klasifikasi referensi dataset.
+* Efektif untuk data teks berdimensi tinggi
+* Akurat dalam klasifikasi multikelas
+* Banyak digunakan dalam NLP (spam detection, sentiment analysis)
 
-Proyek ini menunjukkan bagaimana NLP + ML bisa membantu otomasi dan analisis dalam publikasi ilmiah.
+📌 **Model lain yang diuji**:
 
-👥 Pembagian Tugas (Tag Team GitHub)
+* Naive Bayes
+* Logistic Regression
+  Namun, SVM memberikan hasil terbaik pada dataset ini.
 
-Asrul Fami - 41522010123 - @asrulfami📌 Leader, buat repo GitHub UASDML, integrasi, merge PR semua anggota.
+---
 
-Reyhan Vincent - 41522010142📊 Exploratory Data Analysis: analisis distribusi label, visualisasi, dan deskripsi awal.
+## 4. 💡 Insight dari Model (20%)
 
-Claudio Nehemia Panggabean - 41522010144🔍 Parsing XML dan ekstraksi kalimat berdasarkan dataset_id, cleaning, dan normalisasi teks.
+📈 **Hasil Evaluasi Klasifikasi (SVM):**
 
-Annas Wicaksono - 41522010211 - @annaswcksn🤖 Implementasi model Logistic Regression dan Naive Bayes, preprocessing TF-IDF, evaluasi awal.
+| Label     | Precision | Recall | F1-Score | Support |
+| --------- | --------- | ------ | -------- | ------- |
+| Missing   | 0.91      | 0.98   | 0.94     | 52      |
+| Primary   | 0.89      | 0.91   | 0.90     | 44      |
+| Secondary | 0.99      | 0.93   | 0.96     | 85      |
 
-Andika Gusti Restu Putra - 41522010187 - @Dika0378📈 Evaluasi akhir, membuat confusion matrix, membandingkan model, menyusun insight.
+✅ **Akurasi Total Model**: **94%**
+
+📌 **Insight Penting:**
+
+* Model sangat baik dalam mendeteksi label *Missing* (recall 0.98)
+* *Secondary* memiliki precision tertinggi (0.99)
+* Kesalahan umum terjadi antara *Primary* dan *Secondary* karena kemiripan kosakata
+
+---
+
+## 5. ✅ Kesimpulan (20%)
+
+Model klasifikasi berbasis **SVM + TF-IDF** terbukti efektif untuk mengklasifikasikan tipe referensi dataset dalam artikel ilmiah.
+
+📌 **Kesimpulan Akhir**:
+
+1. Hipotesis nol **ditolak** – tipe referensi dapat diprediksi dari kalimat menggunakan ML
+2. Data kalimat artikel + label dari `train_labels.csv` dapat membentuk model klasifikasi yang andal
+3. Model SVM + TF-IDF cocok dan **direkomendasikan** untuk klasifikasi teks serupa di masa depan
+
+---
+
+### 📁 Struktur File Repositori
+
+```
+📦 UASDML
+ ┣ 📂 data/
+ ┃ ┗ 📄 train_labels.csv
+ ┃ ┗ 📄 articles/
+ ┃ ┗ 📄 parsed_texts.csv
+ ┣ 📂 notebooks/
+ ┃ ┗ 📄 eda_svm_model.ipynb
+ ┣ 📄 README.md
+ ┗ 📄 requirements.txt
+```
+
+---
+
+### ⚙️ Cara Menjalankan
+
+1. Clone repositori:
+
+```bash
+git clone https://github.com/asrulfami/UASDML.git
+cd UASDML
+```
+
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Buka notebook:
+
+```bash
+jupyter notebook notebooks/eda_svm_model.ipynb
+```
+
+---
+
+### 📞 Kontak
+
+Untuk pertanyaan atau saran, silakan hubungi melalui [Issues](https://github.com/asrulfami/UASDML/issues).
+
+---
+
+```
+
+---
+
+Jika kamu ingin saya bantu buatkan juga versi PDF-nya (untuk laporan cetak), tinggal beri tahu saja. Bisa saya susun dengan cover, format baku laporan, dan grafik yang sesuai.
+```
